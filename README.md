@@ -12,32 +12,51 @@ Claude skill files for working with Couchbase — covering every major service a
 
 Skills are structured context files (`SKILL.md` + optional `references/` docs) that Claude loads before responding to requests in a specific domain. They encode patterns, anti-patterns, tool inventory, and decision trees that Claude's general training doesn't reliably cover — especially for fast-moving products like Couchbase.
 
+Skills work with Claude Code, Claude.ai Projects, OpenAI Codex CLI, Cursor, Gemini CLI, and any agent that supports the open Agent Skills standard.
+
 ---
 
-## Installation
+## How to use these skills
 
-### Claude Code
+### Option 1 — Skills CLI (one command, works with Claude Code and most agents)
 
-Add the relevant skills to your project's `CLAUDE.md`:
+```bash
+npx skills add celticht32/Couchbase-Skills-for-Claude.ai
+```
+
+This installs all skills into your project's `.claude/skills/` directory. Claude Code picks them up automatically on the next session.
+
+To install a single skill:
+
+```bash
+npx skills add celticht32/Couchbase-Skills-for-Claude.ai --skill couchbase-sqlpp-tuning
+```
+
+### Option 2 — Claude Code (manual import via CLAUDE.md)
+
+Clone the repo and add references to your project's `CLAUDE.md`:
 
 ```markdown
 @skills/couchbase/couchbase-mcp/SKILL.md
 @skills/couchbase/couchbase-sqlpp-tuning/SKILL.md
 ```
 
-Or let Claude route across all skills:
+Or load the full collection and let Claude route:
 
 ```markdown
 See @skills/ for available Couchbase skills. Load the relevant one before responding to any Couchbase question.
 ```
 
-### Claude.ai Projects
+### Option 3 — Claude.ai Projects
 
-Upload the skill files as Project Knowledge. Claude will reference them automatically in that project's conversations.
+1. Open [claude.ai](https://claude.ai) and create or open a Project
+2. Go to **Project Knowledge → Add content**
+3. Upload the `SKILL.md` files for the skills you want active
+4. Every conversation in that project will have them in context automatically
 
-### Manual
+### Option 4 — Any Claude interface (manual paste)
 
-Paste the relevant `SKILL.md` into your system prompt or at the start of a conversation.
+Open any skill's `SKILL.md`, copy the contents, and paste it into your system prompt or at the start of a conversation. For deep questions, also paste the relevant `references/*.md` file.
 
 ---
 
