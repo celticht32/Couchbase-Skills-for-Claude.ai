@@ -60,6 +60,51 @@ Open any skill's `SKILL.md`, copy the contents, and paste it into your system pr
 
 ---
 
+## Best practices for Claude.ai Projects
+
+A Claude.ai Project gives you a persistent Couchbase assistant — the right skills are always loaded, you never re-explain your environment, and every session starts with full context.
+
+### Recommended Project Knowledge
+
+Don't load all 29 skills — that consumes most of your context window before you type anything. Load the skills you reach for in nearly every session and pull the others in as needed.
+
+**Always-on (upload these to Project Knowledge):**
+
+| File | Why |
+|---|---|
+| `skills/couchbase/couchbase-mcp/SKILL.md` | You'll be calling MCP tools in almost every session |
+| `skills/couchbase/couchbase-sqlpp-tuning/SKILL.md` | Query questions come up constantly |
+| `skills/couchbase/couchbase-data-modeling/SKILL.md` | Design decisions arise early in any new work |
+
+**Add reference files for your most common deep-dive topics.** For example if you do a lot of query work, also upload:
+- `skills/couchbase/couchbase-sqlpp-tuning/references/query-patterns.md`
+- `skills/couchbase/couchbase-sqlpp-tuning/references/explain-plan.md`
+
+**For the other 26 skills:** paste the relevant `SKILL.md` at the start of the conversation when you need it, or use `@` imports in Claude Code.
+
+### Recommended Project Instructions
+
+Set this in your Project's instruction field (the persistent system prompt for every conversation in the project):
+
+```
+I work with Couchbase clusters and MCP servers. Use the loaded skills before
+answering any Couchbase question. When a question falls outside the loaded
+skills, say so and I'll provide the relevant skill. Prefer concise answers.
+Treat me as technical — skip basics.
+```
+
+Adjust to match your environment (self-managed vs Capella, your Couchbase version, your primary languages).
+
+### When to add more skills mid-conversation
+
+If a session moves into territory not covered by your always-on skills — XDCR topology decisions, Kubernetes operator config, a migration plan — paste the relevant `SKILL.md` at that point:
+
+> "Here's the XDCR skill for this question: [paste contents of couchbase-xdcr/SKILL.md]"
+
+Claude will use it for the rest of that conversation without it consuming Project Knowledge space permanently.
+
+---
+
 ## Skills
 
 ### Core Couchbase (`skills/couchbase/`)
