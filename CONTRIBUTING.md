@@ -42,7 +42,8 @@ One-paragraph orientation.
 ```
 
 **Description field rules:**
-- Must start with a verb phrase: "Design...", "Operate...", "Execute..."
+- Write in third person; never first or second person ("I can help you...", "You can use this to..." break skill discovery — see `SKILL_FILE_FORMAT_REFERENCE.md`). An imperative opener ("Design...", "Operate...", "Execute...") is the house pattern and satisfies this.
+- Put the key use case in the first sentence (it survives truncation).
 - Must include explicit "Distinct from" or "Use proactively for" to prevent false triggers
 - Hard limit: 1024 characters. Check with `wc -m <<< "your description"`
 
@@ -50,7 +51,7 @@ One-paragraph orientation.
 
 - Self-contained — readable without the SKILL.md or other references
 - 80–400 lines is the target range
-- No cross-references to other reference files; route through SKILL.md
+- Keep references one level deep: every reference file must link directly from SKILL.md, never only through another reference (no `SKILL.md → a.md → b.md` chains — Claude may only partially read a transitively-reached file). A reference *pointing to* a sibling ("see `error-handling.md`") is fine as long as both are also linked from SKILL.md.
 - End with a decision tree or quick-reference table where it helps
 
 ## Adding a new skill

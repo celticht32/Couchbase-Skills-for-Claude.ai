@@ -24,7 +24,7 @@ A skill for *understanding and tuning* the Magma storage engine — Couchbase's 
 |---|---|---|
 | **Architecture** | B-tree per vBucket | LSM-tree per vBucket |
 | **Default vBuckets** | 1024 | 128 (8.0 default) |
-| **RAM per node minimum** | 256 MB (per bucket) | 100 MB (128 vBucket Magma) |
+| **RAM per node minimum** | 100 MB per bucket (min); memory-to-data ratio 10% | 100 MB (128 vBucket) / 1 GiB (1024 vBucket); memory-to-data ratio 1% |
 | **Optimized for** | Smaller datasets, high read ratio | Large datasets (>100M docs/node), high write rate |
 | **Write performance** | Good at low-moderate write rates | Better at sustained high write rates (LSM absorbs bursts) |
 | **Read performance** | Excellent (direct B-tree lookup) | Good (may require multi-level lookup on cold data) |
@@ -87,11 +87,13 @@ You can still trigger manual compaction on a Magma bucket, but it's usually not 
 
 ## Memory requirements
 
-**Couchstore bucket minimum:** 100 MB per bucket per node (256 MB recommended).
+**Couchstore bucket minimum:** 100 MB per bucket per node. Couchstore has a minimum memory-to-data ratio of ~10% (working set expected to fit largely in RAM).
 
 **Magma bucket minimum:**
 - 128-vBucket Magma: 100 MB per bucket per node
-- 1024-vBucket Magma: 1 GB per bucket per node (higher due to vBucket metadata)
+- 1024-vBucket Magma: 1 GiB per bucket per node (higher due to vBucket metadata)
+
+Magma has a minimum memory-to-data ratio of ~1% — e.g. a node holding 5 TiB in a Magma bucket must allocate at least ~51 GiB RAM for that bucket. This 10:1 difference in the required memory-to-data ratio is Magma's core advantage for large, memory-constrained datasets.
 
 The 128-vBucket default in 8.0 is partly motivated by this: smaller memory footprint makes Magma practical for memory-constrained deployments.
 

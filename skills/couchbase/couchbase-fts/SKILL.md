@@ -77,7 +77,7 @@ Before building an index:
 ## Version notes
 
 - **7.x:** FTS indexes, standard analyzers, geo search, facets, dynamic/static mappings. Vector search available as experimental in late 7.x releases.
-- **8.0+:** `admin_vector_index_*` tools for dedicated vector indexes (HNSW-based kNN); FTS synonym sets via `cb_fts_synonym_*`; hybrid search combining FTS and vector scores.
+- **8.0+:** `admin_vector_index_*` tools for dedicated vector indexes; FTS synonym sets via `cb_fts_synonym_*`; hybrid search combining FTS and vector scores. Note the algorithm differs by index type: the FTS/Search Vector Index (SVI) uses HNSW, while the dedicated Index-Service vector indexes — Composite (CVI) and Hyperscale (HVI) — use a different family (HVI is built on a Vamana/DiskANN-derived hybrid combined with IVF). See `couchbase-ai-applications` for index-type selection.
 - **Capella:** FTS service is available on all tiers. Vector indexes require a minimum compute tier (check current Capella docs for limits).
 
 ## Related skills

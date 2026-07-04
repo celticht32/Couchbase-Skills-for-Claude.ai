@@ -1,12 +1,33 @@
 ---
 name: couchbase-mcp
-description: "Operate Couchbase clusters and Capella v4 through celticht32/MCP-Couchbase (167 tools). Use whenever the user mentions Couchbase, buckets, scopes, collections, SQL++ / N1QL, KV ops, subdocument ops, FTS, vector indexes, XDCR, eventing, backup, encryption / KMIP / DARE, user lock/unlock, query performance, Index Advisor, synonyms (8.x), or Capella organizations / projects / clusters / database users / allowed CIDRs / app services. Use proactively for cluster admin (rebalance, failover, recovery, autofailover, autocompaction, logs, alerts, server groups, audit, password policy, security settings), RBAC design, troubleshooting Couchbase errors (connection, auth, query, index, replication, eventing, KMIP), operational runbooks (rolling upgrade, add/remove node, post-failover recovery, backup/restore, credential rotation), and observability (monitoring, metrics, Prometheus, alerting, dashboards)."
+description: "Operate Couchbase clusters and Capella v4 through an MCP server. Primary target is celticht32/MCP-Couchbase (167 tools) for full data-plane AND cluster admin; also covers the official Couchbase-Ecosystem/mcp-server-couchbase (narrower, data-plane-only, community-maintained, enterprise-supported via AI Data Plane license) and when to pick which. Use whenever the user mentions Couchbase, buckets, scopes, collections, SQL++ / N1QL, KV ops, subdocument ops, FTS, vector indexes, XDCR, eventing, backup, encryption / KMIP / DARE, user lock/unlock, query performance, Index Advisor, synonyms (8.x), or Capella organizations / projects / clusters / database users / allowed CIDRs / app services. Use proactively for cluster admin (rebalance, failover, recovery, autofailover, autocompaction, logs, alerts, audit, password policy), RBAC design, troubleshooting Couchbase errors, operational runbooks (rolling upgrade, node add/remove, post-failover recovery, backup/restore, credential rotation), and observability."
 license: MIT
 ---
 
-# Couchbase MCP — celticht32/MCP-Couchbase
+# Couchbase MCP
 
-A skill for operating Couchbase via the celticht32/MCP-Couchbase server (167 tools across 17 categories), covering the full Couchbase data-plane and cluster administration surface.
+A skill for operating Couchbase through an MCP server. Two servers cover this space, and they are **not** interchangeable — pick based on how much of the surface you need.
+
+## Which MCP server — read this first
+
+| | **celticht32/MCP-Couchbase** (this skill's primary) | **Couchbase-Ecosystem/mcp-server-couchbase** (official) |
+|---|---|---|
+| **Maintainer** | Independent (Chris Ahrendt / celticht32) | Couchbase-Ecosystem — community-maintained; NOT covered by Couchbase's support team unless licensed (see below) |
+| **Surface** | ~167 tools: full data plane **plus** cluster admin (buckets/scopes/collections, users/RBAC, rebalance/failover/recovery, XDCR, eventing, backup, KMIP/DARE), 8.x features (vector indexes, synonyms, user lock), Capella v4 control plane, perf diagnostics | Deliberately narrow: bucket-scoped data plane only — Cluster Health, Data/Schema, Key-Value, Query, Performance (index list, Index Advisor, slow-query analysis) |
+| **Admin ops** (create bucket, rebalance, failover, XDCR, eventing, backup, encryption) | Yes | **No** — not in scope |
+| **Capella control plane** (orgs/projects/clusters/allowlists) | Yes (read-only `capella_*` tools) | No |
+| **Auth / runtime** | Cluster creds + Capella API key; two server processes | Python 3.10+, PyPI/Docker; `CB_CONNECTION_STRING` + basic auth or mTLS; STDIO or Streamable HTTP; bucket-scoped |
+| **Safety** | `CB_MCP_READ_ONLY_MODE` + per-tool `confirm:true` gate | `CB_MCP_READ_ONLY_MODE` / `CB_MCP_READ_ONLY_QUERY_MODE` (read-only query default) |
+| **Enterprise support** | None (independent project) | Available by **licensing Couchbase AI Data Plane**, which also entitles Couchbase Agent Memory + Agent Catalog (GA 2026-06-30) |
+
+**How to choose:**
+- **Cluster administration, XDCR, eventing, backup, encryption, Capella control-plane inspection, or perf-analysis beyond Index Advisor** → celticht32/MCP-Couchbase. The official server can't do these.
+- **Just KV + SQL++ + schema/health/Index-Advisor on a single bucket, want the vendor-tracked package, or need enterprise support via an AI Data Plane license** → the official Couchbase-Ecosystem server.
+- Tool names below (`cb_*`, `admin_*`, `capella_*`) are the **celticht32** server's. The official server uses its own (shorter) tool names — check its README when connected to it. The two do not share a namespace.
+
+Note: celticht32 contributed index-management tools upstream to the official server (PR #187). Overlap in the *data-plane* basics is expected; the *admin* surface is unique to celticht32/MCP-Couchbase.
+
+The rest of this skill documents the **celticht32/MCP-Couchbase** server (~167 tools across 17 categories), covering the full Couchbase data-plane and cluster administration surface.
 
 ## When this skill applies
 
@@ -43,9 +64,9 @@ The 167 tools split into a few clusters that share connection settings, conventi
 
 Each reference is self-contained. The `tool-index.md` is the fastest path to the exact tool name when you already know what you want to do.
 
-## Two server instances
+## Two server instances (celticht32 distribution)
 
-The celticht32 distribution ships **two separate MCP server processes** because they need different credentials and talk to different APIs:
+Within the **celticht32/MCP-Couchbase** distribution (not the official server), there are **two separate MCP server processes** because they need different credentials and talk to different APIs:
 
 1. **Cluster server** (default) — 151 tools talking to a specific Couchbase cluster via `CB_CONNECTION_STRING`, `CB_USERNAME`, `CB_PASSWORD`. Most tools you'll use.
 2. **Capella v4 server** (separate) — 16 read-only tools talking to `cloudapi.cloud.couchbase.com` via `CAPELLA_API_KEY_SECRET` (Bearer auth).

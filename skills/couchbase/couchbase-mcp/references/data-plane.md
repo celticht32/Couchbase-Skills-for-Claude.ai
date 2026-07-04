@@ -136,7 +136,7 @@ The Analytics service is a separate cluster service designed for ad-hoc analytic
 
 The handler resolves dependencies and commits atomically. If any operation fails, the entire transaction rolls back and returns an error explaining which step caused the failure.
 
-Transactions are slower than equivalent KV operations (about 3-5x for typical loads) because they involve two-phase commit. Use them only when atomicity actually matters.
+Transactions are meaningfully slower than equivalent KV operations (they involve staging plus two-phase commit across documents) — use them only when atomicity actually matters.
 
 ## Quick decision tree
 

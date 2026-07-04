@@ -11,8 +11,8 @@ Couchbase 8.0 ships three vector index types. Pick one based on scale, filtering
 | **Memory model** | FTS memory quota | Index Service RAM | Low memory footprint (disk-optimized) |
 | **Scalar filters** | Post-filter only | Pre-filter (in index) | Post-filter only |
 | **Hybrid text+vector** | Yes — same index | No | No |
-| **SQL++ support** | No | Yes — `ANN_DISTANCE()` | No |
-| **Query interface** | `cb_fts_search` knn | `cb_query` with `ANN_DISTANCE()` | `cb_fts_search` knn |
+| **SQL++ support** | No | Yes — `APPROX_VECTOR_DISTANCE()` | No |
+| **Query interface** | `cb_fts_search` knn | `cb_query` with `APPROX_VECTOR_DISTANCE()` | `cb_fts_search` knn |
 | **When to use** | Hybrid search; smaller corpora | Filtered vector search in SQL++ | Billion-scale; low-memory requirement |
 
 ## Search Vector Index (SVI) — pre-8.0 approach, still valid
@@ -53,11 +53,11 @@ Query via SQL++:
 
 ```sql
 SELECT p.title, p.description,
-       ANN_DISTANCE(p.embedding, $query_vector, "COSINE") AS distance
+       APPROX_VECTOR_DISTANCE(p.embedding, $query_vector, "COSINE") AS distance
 FROM `my-bucket`.`my-scope`.products AS p
 WHERE p.category = "electronics"
   AND p.status = "active"
-ORDER BY ANN_DISTANCE(p.embedding, $query_vector, "COSINE")
+ORDER BY APPROX_VECTOR_DISTANCE(p.embedding, $query_vector, "COSINE")
 LIMIT 10
 ```
 
@@ -71,7 +71,7 @@ Use when:
 
 ## Hyperscale Vector Index (HVI) — billion-scale
 
-Stored in the Index Service with a disk-optimized storage format. Trades some query speed for massive scale and low memory footprint. Independent benchmarks show 19,000 QPS at 28ms latency at 66% recall (tunable).
+Stored in the Index Service with a disk-optimized storage format, using the DiskANN nearest-neighbor algorithm with Vamana graph construction. Trades some query speed for massive scale and low memory footprint. In VectorDBBench testing (Couchbase-commissioned, using the independent VectorDBBench tool; announced Oct 23, 2025), HVI delivered 19,057 QPS at 28ms latency at 66% recall on a 1-billion-vector / 128-dim dataset, and 703 QPS at 369ms at 93% recall when tuned for accuracy. Recall is tunable (see below).
 
 ```python
 admin_vector_index_create_hyperscale(
@@ -111,11 +111,11 @@ Use when:
 
 | recall_target | QPS (approx) | Latency | Use case |
 |---|---|---|---|
-| 0.66 | ~19,000 | 28ms | High-throughput, precision less critical |
-| 0.90 | ~700 | < 1s | Balanced — most production workloads |
-| 0.99 | < 100 | Seconds | Maximum accuracy requirement |
+| 0.66 | ~19,057 | 28ms | High-throughput, precision less critical (measured) |
+| 0.93 | ~703 | 369ms | Balanced — most production workloads (measured) |
+| 0.99 | < 100 | Seconds | Maximum accuracy requirement (extrapolated) |
 
-Start at 0.90 for production. Lower if latency is critical; raise if retrieval quality is critical.
+The 0.66 and 0.93 rows are the two measured VectorDBBench points cited above (1B vectors, 128-dim); intermediate and higher targets are approximate. Start around 0.90 for production. Lower if latency is critical; raise if retrieval quality is critical.
 
 ## Migration path from pre-8.0
 

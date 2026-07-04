@@ -57,17 +57,18 @@ Most RAG failures are retrieval failures: wrong chunks returned, too few chunks,
 | Drop a vector index | `admin_vector_index_drop` |
 | Run a kNN vector search | `cb_fts_search` with `knn` query |
 | Run hybrid text + vector search | `cb_fts_search` with `knn` + `query` combined |
-| SQL++ with vector function (CVI) | `cb_query` with `ANN_DISTANCE()` |
+| SQL++ with vector function (CVI) | `cb_query` with `APPROX_VECTOR_DISTANCE()` |
 
 ## Version notes
 
 - **Pre-8.0:** FTS-based vector search (Search Vector Index) only. Limited to ~10M vectors per index, lower recall at scale.
 - **8.0 (GA October 2025):** Three index types. HVI and CVI use the Index Service (not FTS). Billion-scale supported. Composite Vector Index enables scalar-filtered vector search in SQL++.
 - **Capella:** All three index types available. HVI requires an appropriately sized compute tier.
+- **AI Data Plane (GA June 30, 2026):** Couchbase now offers agent-focused building blocks beyond raw vector search — **Agent Memory** (managed conversational/agent memory store) and **Agent Catalog** (tool/prompt catalog for agentic apps), delivered as part of the self-managed **AI Data Plane** (the successor to the managed-Capella AI Services line, which GA'd alongside 8.0). Licensing the AI Data Plane also provides enterprise support for the official Couchbase MCP server (see `couchbase-mcp`). Detailed first-party API references for Agent Memory / Agent Catalog were still rolling out as of this writing; treat specific method signatures as unverified until confirmed against current docs, and prefer the vectorization/RAG patterns in this skill for anything you need to ship today.
 
 ## Related skills
 
 - `couchbase-fts` — FTS index mechanics, analyzers, query syntax, SVI configuration details
 - `couchbase-data-modeling` — document shape decisions that affect chunking and embedding storage
 - `couchbase-sizing` — vector index memory budgeting
-- `couchbase-sqlpp-tuning` — SQL++ queries using `ANN_DISTANCE()` with CVI
+- `couchbase-sqlpp-tuning` — SQL++ queries using `APPROX_VECTOR_DISTANCE()` with CVI

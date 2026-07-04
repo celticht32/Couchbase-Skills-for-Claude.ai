@@ -61,12 +61,12 @@ Pre-filter by metadata before vector search. Dramatically improves results for m
 ```sql
 -- Only search within the user's tenant and the relevant product area
 SELECT c.chunk_text, c.parent_title, c.section,
-       ANN_DISTANCE(c.embedding, $query_vec, "COSINE") AS score
+       APPROX_VECTOR_DISTANCE(c.embedding, $query_vec, "COSINE") AS score
 FROM `kb`.`default`.chunks AS c
 WHERE c.tenant_id = $tenant_id
   AND c.product_area = $product_area
   AND c.status = "published"
-ORDER BY ANN_DISTANCE(c.embedding, $query_vec, "COSINE")
+ORDER BY APPROX_VECTOR_DISTANCE(c.embedding, $query_vec, "COSINE")
 LIMIT 10
 ```
 

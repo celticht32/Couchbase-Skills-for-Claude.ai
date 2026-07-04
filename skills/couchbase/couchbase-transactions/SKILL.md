@@ -33,7 +33,7 @@ Distinct from:
 
 ## Core principle: try to design around transactions
 
-Transactions in Couchbase are 3-5× slower than equivalent KV operations and add retry complexity. Before reaching for a transaction, ask: can this be modeled as a single-document update? Often the answer is yes. See `references/when-to-use.md` for the decision framework.
+Transactions in Couchbase are meaningfully slower than equivalent single-document KV operations — they do substantially more work (staging, two-phase commit across documents, Active Transaction Record bookkeeping, and possible retries) — and add retry complexity. Before reaching for a transaction, ask: can this be modeled as a single-document update? Often the answer is yes. See `references/when-to-use.md` for the decision framework.
 
 When you do need transactions, they're correct and reliable — just plan for the cost.
 

@@ -58,6 +58,17 @@ Couchbase Lite runs on:
 
 All platforms share the same replication protocol and sync semantics. The API differs by language but the concepts are identical.
 
+## Current releases (mid-2026)
+
+The June 30, 2026 edge/mobile wave (shipped alongside the AI Data Plane — see `couchbase-ai-applications`) advanced the whole mobile stack. Gate version-specific guidance accordingly, and verify exact API surface against the docs for the version you target:
+
+- **Couchbase Lite 4.1** — peer-to-peer sync over Bluetooth with automatic switch to Wi-Fi; expanded Windows / ARM support; on-device vector search continues from 3.2 (see `references/couchbase-lite.md`).
+- **Edge Server 1.1** — client-level (per-client) access control; expanded Windows/ARM support. Edge Server is the lightweight on-prem/edge sync+query tier between Lite devices and the cloud.
+- **Sync Gateway 4.1** — cloud-to-edge sync, non-disruptive rolling upgrades, concurrent distributed resync for high-volume workloads; available as a managed service through App Services.
+- **React Native 1.1** — Turbo Module integration for direct Couchbase Lite performance without bridging overhead.
+
+Don't remove older-version guidance when relying on these — mixed fleets are common in the field. Treat specific new API signatures as unverified until confirmed against the versioned docs.
+
 ## Capella App Services vs self-managed Sync Gateway
 
 | | Capella App Services | Self-managed Sync Gateway |

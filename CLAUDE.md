@@ -11,7 +11,7 @@ content that the SKILL.md routes to.
 
 ```
 skills/
-  couchbase/               # Core Couchbase Server / Capella skills (12 skills)
+  couchbase/               # Core Couchbase Server / Capella skills (22 skills)
   couchbase-analytics/     # Couchbase Analytics Service / cb-analytics-mcp skills (8 skills)
 ```
 

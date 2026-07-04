@@ -161,3 +161,23 @@ function OnUpdate(doc, meta) {
 - **Prefer KV bindings over N1QL** for single-document lookups — a binding read is a direct KV get; N1QL involves query parsing, plan, and execution.
 - **Batch-aware design:** Eventing processes mutations one at a time per worker. If you need bulk processing, accumulate work orders in a queue collection and process them with a separate function or external consumer.
 - **Keep handlers under ~100ms.** Longer handlers reduce throughput proportionally. The Eventing service has a configurable `execution_timeout` (default 60s) but it's a ceiling, not a goal.
+
+## Mutation deduplication (what your handler actually sees)
+
+The KV data engine deduplicates multiple mutations made to a single document in quick succession before they reach DCP. Because Eventing consumes the DCP stream, `OnUpdate` / `OnDelete` see only the deduplicated events — the handler is guaranteed the document's *final* state, but may not see every intermediate state when a document mutates rapidly. Consequences to design around:
+
+- You **cannot distinguish Create from Update** in `OnUpdate` — both arrive as the same event.
+- You **cannot get old-vs-new values** of a document inside a handler; there is no built-in versioning. If you need change history, write it into the document (or a side collection) as part of your application logic.
+- Don't build logic that assumes it will observe every transition of a fast-changing document. Reconcile against final state instead.
+
+## Vector embeddings in Eventing (8.0+)
+
+Eventing is the execution engine behind Capella's Vectorization Service, and you can author embedding logic directly in handlers.
+
+- **Batching:** the Vectorization Service batches source text in groups of **16 objects** per embedding call (one text-to-embed per source document). Batching cuts API calls, but **if the combined text in a batch exceeds the embedding model's maximum input length, that batch fails** — so keep per-document source text within the model's token limit, or the oversized batch won't be processed.
+- **Packing vectors as base64:** to store or transmit float embedding arrays compactly, use the built-in helpers rather than hand-rolling encoding:
+  - `couchbase.base64Float32ArrayEncode(arr)` / `couchbase.base64Float32ArrayDecode(str)`
+  - `couchbase.base64Float64ArrayEncode(arr)` / `couchbase.base64Float64ArrayDecode(str)`
+
+  These pack a float32/float64 number array into a base64 string (and back), keeping vector data intact through text-based paths. (General `couchbase.base64Encode` / `base64Decode` also exist for arbitrary JSON.)
+- **Prerequisite:** vectorization workflows require an operational cluster running Couchbase 8.0+ with the Search and Eventing services on at least one Service Group.

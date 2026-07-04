@@ -168,9 +168,9 @@ class MyConflictResolver: ConflictResolverProtocol {
 config.conflictResolver = MyConflictResolver()
 ```
 
-## Vector search in Couchbase Lite (2.0+)
+## Vector search in Couchbase Lite (3.2+)
 
-Couchbase Lite supports on-device vector search for semantic search without a server:
+On-device vector search was introduced in Couchbase Lite **3.2** (public beta April 2024; GA followed) and extended in **Lite 4.1** (2026). It enables semantic search without a server:
 
 ```swift
 // Create a vector index
@@ -186,6 +186,10 @@ query.parameters?.setArray(MutableArrayObject(data: queryVector), forName: "quer
 ```
 
 On-device vector search is useful for: privacy-sensitive applications, fully offline semantic search, edge inference pipelines.
+
+**Vector encoding (compression).** Lite supports encoding to shrink the index: `none` (highest accuracy, largest), Scalar Quantizer (`SQ4`/`SQ6`/`SQ8` — 4/6/8 bits per component), and Product Quantizer. More compression = smaller/faster index but lower distance accuracy. Set via the vector index config.
+
+**Lazy indexing.** As an alternative to the standard predictive-model-driven index, Lite supports *lazy* vector indexing where your app supplies embeddings on its own schedule (via the index updater) rather than the index computing them inline. Useful when embeddings come from an external/edge model. Note: index-update throughput characteristics for the lazy path are not well documented — benchmark against your own device/model before relying on a specific rate.
 
 ## Best practices
 

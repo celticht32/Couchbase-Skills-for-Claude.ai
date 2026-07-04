@@ -144,7 +144,7 @@ Plan dedicated FTS/Search nodes with enough RAM. Vector index data isn't served 
 
 ## Limitations and gotchas
 
-- **Dimension limit:** 2048 dimensions max in current releases. Models producing larger vectors (some multimodal models) can't be used directly — consider dimensionality reduction.
+- **Dimension limit:** 4096 dimensions max (Search Service, Couchbase Server 7.6.2+). Models producing larger vectors (some multimodal models) can't be used directly — consider dimensionality reduction.
 - **No null vectors:** documents missing the embedding field are excluded from vector search results. Make sure every document in the collection has the field, or use a partial FTS index to scope to documents that have it.
 - **Index rebuild on dimension change:** there is no in-place resize. If you switch embedding models, drop and recreate the index, re-embed all documents.
 - **k is not the result count:** `k` is the number of candidates the index considers. The final `size` parameter trims the result. Set `k >= size` (and typically `k = 3-5x size`) for reasonable recall.

@@ -2,7 +2,7 @@
 
 Claude skill files for working with Couchbase — covering every major service and deployment pattern from application integration through AI applications, Kubernetes operations, mobile sync, security hardening, and analytics.
 
-**29 skills · 124 files · ~18,000 lines**
+**30 skills · 130 files · ~18,000 lines**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
@@ -66,7 +66,7 @@ A Claude.ai Project gives you a persistent Couchbase assistant — the right ski
 
 ### Recommended Project Knowledge
 
-Don't load all 29 skills — that consumes most of your context window before you type anything. Load the skills you reach for in nearly every session and pull the others in as needed.
+Don't load all 30 skills — that consumes most of your context window before you type anything. Load the skills you reach for in nearly every session and pull the others in as needed.
 
 **Always-on (upload these to Project Knowledge):**
 
@@ -80,7 +80,7 @@ Don't load all 29 skills — that consumes most of your context window before yo
 - `skills/couchbase/couchbase-sqlpp-tuning/references/query-patterns.md`
 - `skills/couchbase/couchbase-sqlpp-tuning/references/explain-plan.md`
 
-**For the other 26 skills:** paste the relevant `SKILL.md` at the start of the conversation when you need it, or use `@` imports in Claude Code.
+**For the other 27 skills:** paste the relevant `SKILL.md` at the start of the conversation when you need it, or use `@` imports in Claude Code.
 
 ### Recommended Project Instructions
 
@@ -131,7 +131,8 @@ Claude will use it for the rest of that conversation without it consuming Projec
 | [`couchbase-performance-tuning`](skills/couchbase/couchbase-performance-tuning/) | Cluster performance — KV latency, DCP backpressure, compaction, connection limits, OS tuning | 3 |
 | [`couchbase-upgrade`](skills/couchbase/couchbase-upgrade/) | Version upgrades — upgrade paths, 8.0 breaking changes, Magma default, pre/post-upgrade checklist | — |
 | [`couchbase-magma`](skills/couchbase/couchbase-magma/) | Magma storage engine — couchstore vs Magma, 128 vs 1024 vBuckets, compaction, memory requirements | — |
-| [`couchbase-columnar`](skills/couchbase/couchbase-columnar/) | Capella Columnar — columnar analytics, links to operational data, BI tool integration | 2 |
+| [`couchbase-columnar`](skills/couchbase/couchbase-columnar/) | Capella Analytics (formerly Capella Columnar) — columnar analytics, links to operational data, BI tool integration | 2 |
+| [`couchbase-coding-standards`](skills/couchbase/couchbase-coding-standards/) | Coding standards & style guide — general clean-code discipline plus Couchbase conventions: SDK idioms, key/field naming, error/retry/CAS handling, parameterized SQL++, code-review checklists | 5 |
 
 ### Analytics Service (`skills/couchbase-analytics/`)
 
@@ -154,7 +155,7 @@ These skills document the [celticht32/Couchbase-Analytics-MCP-Server](https://gi
 
 ```
 skills/
-  couchbase/           # 21 core Couchbase Server / Capella skills
+  couchbase/           # 22 core Couchbase Server / Capella skills
     <skill-name>/
       SKILL.md
       references/
